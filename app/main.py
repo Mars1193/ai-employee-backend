@@ -1,9 +1,17 @@
+# File: app/main.py
+import os
 from fastapi import FastAPI
-from app.db import models
-from app.db.database import engine
+from app.db import database, models
 from app.api import auth, documents
+from app.core.config import settings
 
-# This line creates the FastAPI application instance
+# --- DEBUGGING STEP ---
+# Print the database URL to the logs to verify it
+print("--- Attempting to connect with DATABASE_URL: ---")
+print(f"'{settings.DATABASE_URL}'")
+print("-------------------------------------------------")
+# ----------------------
+
 app = FastAPI(title="NAS AI Employee Backend")
 
 @app.on_event("startup")
@@ -11,7 +19,7 @@ async def startup_event():
     """
     On startup, create database tables.
     """
-    async with engine.begin() as conn:
+    async with database.engine.begin() as conn:
         await conn.run_sync(models.Base.metadata.create_all)
 
 # Include API routers from other files
