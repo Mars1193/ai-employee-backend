@@ -1,16 +1,22 @@
 # File: app/core/config.py
-import os
-from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
-
-# Load environment variables from .env file at the very beginning
-load_dotenv()
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    # Read the database URL and strip any leading/trailing whitespace or newlines
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "").strip()
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "default_secret")
+    # Pydantic-settings will automatically look for these variables
+    # in the system environment or a .env file.
+    DATABASE_URL: str
+    SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+    # This tells pydantic-settings to look for a .env file
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding='utf-8')
+
 settings = Settings()
+
+# --- DEBUGGING STEP ---
+# We will print the final URL that the application is using.
+print("--- Settings loaded. Final DATABASE_URL being used: ---")
+print(f"'{settings.DATABASE_URL}'")
+print("-------------------------------------------------")
+# ----------------------

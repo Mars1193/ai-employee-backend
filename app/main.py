@@ -1,16 +1,8 @@
 # File: app/main.py
-import os
 from fastapi import FastAPI
 from app.db import database, models
 from app.api import auth, documents
-from app.core.config import settings
-
-# --- DEBUGGING STEP ---
-# Print the database URL to the logs to verify it
-print("--- Attempting to connect with DATABASE_URL: ---")
-print(f"'{settings.DATABASE_URL}'")
-print("-------------------------------------------------")
-# ----------------------
+from app.core.config import settings # This import will run the config.py code
 
 app = FastAPI(title="NAS AI Employee Backend")
 
